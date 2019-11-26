@@ -1,0 +1,62 @@
+{
+    "name": "react-tel-number-input",
+    "version": "0.0.1",
+    "description": "Component for React",
+    "main": "./lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "scripts": {
+        "dev": "parcel --no-cache example/index.html",
+        "build": "npm run test && npm run lint && npm run clean && webpack --mode production && parcel build --no-cache --public-url ./ example/index.html",
+        "prettier": "prettier --config .prettierrc.json --write src/**/*.ts",
+        "lint": "eslint src/**",
+        "test:watch": "jest --watch",
+        "test": "jest",
+        "clean": "rimraf lib && rimraf dist"
+    },
+    "keywords": [
+        ""
+    ],
+    "author": "Morozov Dmitry <dimemorozovy@yandex.ru>",
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/core": "^7.7.4",
+        "@babel/preset-env": "^7.7.4",
+        "@types/enzyme": "^3.10.3",
+        "@types/enzyme-adapter-react-16": "^1.0.5",
+        "@types/enzyme-to-json": "^1.5.3",
+        "@types/jest": "^24.0.23",
+        "@types/react": "^16.9.13",
+        "@types/react-dom": "^16.9.4",
+        "@types/react-syntax-highlighter": "11.0.2",
+        "@typescript-eslint/eslint-plugin": "^2.9.0",
+        "@typescript-eslint/parser": "^2.9.0",
+        "awesome-typescript-loader": "^5.2.1",
+        "babel-loader": "^8.0.6",
+        "enzyme": "^3.10.0",
+        "enzyme-adapter-react-16": "^1.15.1",
+        "enzyme-to-json": "^3.4.3",
+        "eslint": "^6.7.1",
+        "eslint-plugin-react": "^7.16.0",
+        "jest": "^24.9.0",
+        "parcel-bundler": "^1.12.4",
+        "prettier": "^1.19.1",
+        "react-addons-test-utils": "^15.6.2",
+        "react-syntax-highlighter": "^11.0.2",
+        "rimraf": "^3.0.0",
+        "sinon": "^7.5.0",
+        "source-map-loader": "^0.2.4",
+        "ts-jest": "^24.2.0",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.7.2",
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10"
+    },
+    "dependencies": {
+        "react": "^16.12.0",
+        "react-dom": "^16.12.0"
+    }
+}
