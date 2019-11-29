@@ -1,4 +1,13 @@
-const allCountries = [
+export interface Country {
+    alpha2: string;
+    alpha3: string;
+    countryCallingCodes: string[];
+    emoji: string;
+    name: string;
+    props?: any;
+}
+
+export const allCountries: Country[] = [
     {
         alpha2: "AD",
         alpha3: "AND",

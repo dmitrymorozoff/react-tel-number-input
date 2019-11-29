@@ -14,8 +14,8 @@
         cursor: pointer;
         font-size: 13px;
         font-weight: 400;
-        height: 42px;
-        min-height: 42px;
+        height: 100%;
+        min-height: 100%;
         outline: none;
         padding-left: 8px;
         padding-right: 22px;
@@ -30,8 +30,7 @@
     &-toggle {
         position: absolute;
         right: 10px;
-        transform: translateY(-50%);
-        top: 50%;
+        top: calc(50% - 8px);
         transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
         text-align: center;
         display: inline-block;
