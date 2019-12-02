@@ -12,6 +12,7 @@ interface Props {
     onlyCountries: string[];
     preferredCountries: string[];
     showFlags: boolean;
+    showCountryCodeInList: boolean;
 }
 
 export const PhoneInput: React.FC<Props> = ({
@@ -21,6 +22,7 @@ export const PhoneInput: React.FC<Props> = ({
     onlyCountries,
     preferredCountries,
     showFlags,
+    showCountryCodeInList,
 }: Props) => {
     return (
         <div className="react-tel-number-input">
@@ -29,9 +31,11 @@ export const PhoneInput: React.FC<Props> = ({
                     allCountries={allCountries}
                     defaultCountry={defaultCountry}
                     disabled={disabled}
-                    onlyCountries={["ru", "us"]}
-                    preferredCountries={["us", "ru"]}
+                    ignoredCountries={ignoredCountries}
+                    onlyCountries={onlyCountries}
+                    preferredCountries={preferredCountries}
                     showFlags={showFlags}
+                    showCountryCodeInList={showCountryCodeInList}
                 />
             </div>
             <div className="phone-input-container">

@@ -4,6 +4,8 @@ import "./style.scss";
 import { useOnClickOutside } from "../../../services/hooks/use-on-click-outside";
 import { Country } from "../../../assets/country-list";
 import { getSortingCountries } from "../../../services/utils/sorting-countries";
+import "../../../assets/flags/flags.scss";
+import { ListItem } from "./list-item";
 
 interface Props {
     allCountries: Country[];
@@ -13,6 +15,7 @@ interface Props {
     onlyCountries: string[];
     preferredCountries: string[];
     showFlags: boolean;
+    showCountryCodeInList: boolean;
 }
 
 export const CountrySelector: React.FC<Props> = React.memo(
@@ -21,6 +24,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
         ignoredCountries,
         onlyCountries,
         preferredCountries,
+        showCountryCodeInList = true,
     }: Props) => {
         const countrySelectorRef = React.useRef<HTMLInputElement>(null);
         const [isFocus, setFocus] = React.useState<boolean>(false);
@@ -76,33 +80,17 @@ export const CountrySelector: React.FC<Props> = React.memo(
                         "country-selector-list--is-focus": isFocus,
                     })}
                 >
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
-                    <div className={cx("country-selector-list__item")}>1</div>
+                    {sortedCountries.map(
+                        ({ alpha2, name, countryCallingCodes }, index) => (
+                            <ListItem
+                                alpha2={alpha2}
+                                countryCallingCodes={countryCallingCodes}
+                                key={`${alpha2 + index}`}
+                                name={name}
+                                showCountryCodeInList={showCountryCodeInList}
+                            />
+                        ),
+                    )}
                 </div>
             </div>
         );
