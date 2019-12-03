@@ -25,9 +25,25 @@ export const CountrySelector: React.FC<Props> = React.memo(
         onlyCountries,
         preferredCountries,
         showCountryCodeInList = true,
+        defaultCountry = "ru",
     }: Props) => {
+        const sortedCountries = getSortingCountries({
+            allCountries,
+            ignoredCountries,
+            onlyCountries,
+            preferredCountries,
+        });
+
+        const initialSelectedCountry =
+            sortedCountries.find(
+                country => country.alpha2 === defaultCountry.toUpperCase(),
+            ) || sortedCountries[0];
+
         const countrySelectorRef = React.useRef<HTMLInputElement>(null);
         const [isFocus, setFocus] = React.useState<boolean>(false);
+        const [selectedCountry, setSelectedCountry] = React.useState<Country>(
+            initialSelectedCountry,
+        );
 
         const onFocusHandler = (): void => {
             setFocus(true);
@@ -42,14 +58,16 @@ export const CountrySelector: React.FC<Props> = React.memo(
             handler: () => onBlurHandler(),
         });
 
-        const sortedCountries = getSortingCountries({
-            allCountries,
-            ignoredCountries,
-            onlyCountries,
-            preferredCountries,
-        });
+        const closeListHandler = (): void => {
+            setFocus(false);
+        };
 
-        console.log("sortedCountries", sortedCountries);
+        const updateValue = (country: Country): void => {
+            closeListHandler();
+            setSelectedCountry(country);
+        };
+
+        console.log("selectedCountry", selectedCountry);
 
         return (
             <div
@@ -59,13 +77,19 @@ export const CountrySelector: React.FC<Props> = React.memo(
                 })}
                 onClick={onFocusHandler}
             >
+                <div className={"country-selector__flag"}>
+                    <div
+                        className={`iti__flag iti__${selectedCountry.alpha2.toLowerCase()}`}
+                    />
+                </div>
                 <input
+                    value={selectedCountry.countryCallingCodes[0]}
                     type="text"
                     className={cx("country-selector__input", {
                         "country-selector__input--is-focus": isFocus,
                     })}
                     onFocus={onFocusHandler}
-                    onBlur={onBlurHandler}
+                    // onBlur={onBlurHandler}
                     readOnly={true}
                 ></input>
                 <div
@@ -80,17 +104,14 @@ export const CountrySelector: React.FC<Props> = React.memo(
                         "country-selector-list--is-focus": isFocus,
                     })}
                 >
-                    {sortedCountries.map(
-                        ({ alpha2, name, countryCallingCodes }, index) => (
-                            <ListItem
-                                alpha2={alpha2}
-                                countryCallingCodes={countryCallingCodes}
-                                key={`${alpha2 + index}`}
-                                name={name}
-                                showCountryCodeInList={showCountryCodeInList}
-                            />
-                        ),
-                    )}
+                    {sortedCountries.map((country, index) => (
+                        <ListItem
+                            country={country}
+                            key={`${country.alpha2 + index}`}
+                            onClick={updateValue}
+                            showCountryCodeInList={showCountryCodeInList}
+                        />
+                    ))}
                 </div>
             </div>
         );

@@ -1,29 +1,33 @@
 import * as React from "react";
 import "../style.scss";
+import { Country } from "src/assets/country-list";
 
 interface Props {
+    country: Country;
+    onClick: (country: Country) => void;
     showCountryCodeInList: boolean;
-    alpha2: string;
-    name: string;
-    countryCallingCodes: string[];
 }
 
 export const ListItem: React.FC<Props> = ({
+    country,
+    onClick,
     showCountryCodeInList = true,
-    alpha2,
-    name,
-    countryCallingCodes,
 }: Props) => {
+    const onClickHandler = (): void => {
+        onClick(country);
+    };
     return (
-        <div className={"country-selector-list__item"}>
+        <div className={"country-selector-list__item"} onClick={onClickHandler}>
             <div className={"country-selector-list__item__flag-container"}>
-                <div className={`iti__flag iti__${alpha2.toLowerCase()}`} />
+                <div
+                    className={`iti__flag iti__${country.alpha2.toLowerCase()}`}
+                />
             </div>
             <div className={"country-selector-text"}>
-                {name}
+                {country.name}
                 {showCountryCodeInList && (
                     <div className={"country-selector-code"}>
-                        {`(${countryCallingCodes[0]})`}
+                        {`(${country.countryCallingCodes[0]})`}
                     </div>
                 )}
             </div>
