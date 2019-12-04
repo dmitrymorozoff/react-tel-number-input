@@ -32,14 +32,14 @@ export const allCountries: Country[] = [
     {
         alpha2: "AG",
         alpha3: "ATG",
-        countryCallingCodes: ["+1 268"],
+        countryCallingCodes: ["+1268"],
         emoji: "🇦🇬",
         name: "Antigua And Barbuda",
     },
     {
         alpha2: "AI",
         alpha3: "AIA",
-        countryCallingCodes: ["+1 264"],
+        countryCallingCodes: ["+1264"],
         emoji: "🇦🇮",
         name: "Anguilla",
     },
@@ -74,7 +74,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "AS",
         alpha3: "ASM",
-        countryCallingCodes: ["+1 684"],
+        countryCallingCodes: ["+1684"],
         emoji: "🇦🇸",
         name: "American Samoa",
     },
@@ -123,7 +123,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "BB",
         alpha3: "BRB",
-        countryCallingCodes: ["+1 246"],
+        countryCallingCodes: ["+1246"],
         emoji: "🇧🇧",
         name: "Barbados",
     },
@@ -186,7 +186,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "BM",
         alpha3: "BMU",
-        countryCallingCodes: ["+1 441"],
+        countryCallingCodes: ["+1441"],
         emoji: "🇧🇲",
         name: "Bermuda",
     },
@@ -221,7 +221,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "BS",
         alpha3: "BHS",
-        countryCallingCodes: ["+1 242"],
+        countryCallingCodes: ["+1242"],
         emoji: "🇧🇸",
         name: "Bahamas",
     },
@@ -410,14 +410,14 @@ export const allCountries: Country[] = [
     {
         alpha2: "DM",
         alpha3: "DMA",
-        countryCallingCodes: ["+1 767"],
+        countryCallingCodes: ["+1767"],
         emoji: "🇩🇲",
         name: "Dominica",
     },
     {
         alpha2: "DO",
         alpha3: "DOM",
-        countryCallingCodes: ["+1 809", "+1 829", "+1 849"],
+        countryCallingCodes: ["+1"],
         emoji: "🇩🇴",
         name: "Dominican Republic",
     },
@@ -627,7 +627,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "GU",
         alpha3: "GUM",
-        countryCallingCodes: ["+1 671"],
+        countryCallingCodes: ["+1671"],
         emoji: "🇬🇺",
         name: "Guam",
     },
@@ -760,7 +760,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "JM",
         alpha3: "JAM",
-        countryCallingCodes: ["+1 876"],
+        countryCallingCodes: ["+1876"],
         emoji: "🇯🇲",
         name: "Jamaica",
     },
@@ -816,7 +816,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "KN",
         alpha3: "KNA",
-        countryCallingCodes: ["+1 869"],
+        countryCallingCodes: ["+1869"],
         emoji: "🇰🇳",
         name: "Saint Kitts And Nevis",
     },
@@ -844,14 +844,14 @@ export const allCountries: Country[] = [
     {
         alpha2: "KY",
         alpha3: "CYM",
-        countryCallingCodes: ["+1 345"],
+        countryCallingCodes: ["+1345"],
         emoji: "🇰🇾",
         name: "Cayman Islands",
     },
     {
         alpha2: "KZ",
         alpha3: "KAZ",
-        countryCallingCodes: ["+7", "+7 6", "+7 7"],
+        countryCallingCodes: ["+7"],
         emoji: "🇰🇿",
         name: "Kazakhstan",
     },
@@ -872,7 +872,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "LC",
         alpha3: "LCA",
-        countryCallingCodes: ["+1 758"],
+        countryCallingCodes: ["+1758"],
         emoji: "🇱🇨",
         name: "Saint Lucia",
     },
@@ -1019,7 +1019,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "MP",
         alpha3: "MNP",
-        countryCallingCodes: ["+1 670"],
+        countryCallingCodes: ["+1670"],
         emoji: "🇲🇵",
         name: "Northern Mariana Islands",
     },
@@ -1040,7 +1040,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "MS",
         alpha3: "MSR",
-        countryCallingCodes: ["+1 664"],
+        countryCallingCodes: ["+1664"],
         emoji: "🇲🇸",
         name: "Montserrat",
     },
@@ -1243,7 +1243,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "PR",
         alpha3: "PRI",
-        countryCallingCodes: ["+1 787", "+1 939"],
+        countryCallingCodes: ["+1"],
         emoji: "🇵🇷",
         name: "Puerto Rico",
     },
@@ -1306,7 +1306,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "RU",
         alpha3: "RUS",
-        countryCallingCodes: ["+7", "+7 3", "+7 4", "+7 8"],
+        countryCallingCodes: ["+7"],
         emoji: "🇷🇺",
         name: "Russian Federation",
     },
@@ -1446,7 +1446,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "SX",
         alpha3: "SXM",
-        countryCallingCodes: ["+1 721"],
+        countryCallingCodes: ["+1721"],
         emoji: "🇸🇽",
         name: "Sint Maarten",
     },
@@ -1467,7 +1467,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "TC",
         alpha3: "TCA",
-        countryCallingCodes: ["+1 649"],
+        countryCallingCodes: ["+1649"],
         emoji: "🇹🇨",
         name: "Turks And Caicos Islands",
     },
@@ -1544,7 +1544,7 @@ export const allCountries: Country[] = [
     {
         alpha2: "TT",
         alpha3: "TTO",
-        countryCallingCodes: ["+1 868"],
+        countryCallingCodes: ["+1868"],
         emoji: "🇹🇹",
         name: "Trinidad And Tobago",
     },
@@ -1607,14 +1607,14 @@ export const allCountries: Country[] = [
     {
         alpha2: "VA",
         alpha3: "VAT",
-        countryCallingCodes: ["+379", "+39"],
+        countryCallingCodes: ["+3"],
         emoji: "🇻🇦",
         name: "Vatican City State",
     },
     {
         alpha2: "VC",
         alpha3: "VCT",
-        countryCallingCodes: ["+1 784"],
+        countryCallingCodes: ["+1784"],
         emoji: "🇻🇨",
         name: "Saint Vincent And The Grenadines",
     },
@@ -1628,14 +1628,14 @@ export const allCountries: Country[] = [
     {
         alpha2: "VG",
         alpha3: "VGB",
-        countryCallingCodes: ["+1 284"],
+        countryCallingCodes: ["+1284"],
         emoji: "🇻🇬",
         name: "Virgin Islands (British)",
     },
     {
         alpha2: "VI",
         alpha3: "VIR",
-        countryCallingCodes: ["+1 340"],
+        countryCallingCodes: ["+1340"],
         emoji: "🇻🇮",
         name: "Virgin Islands (US)",
     },

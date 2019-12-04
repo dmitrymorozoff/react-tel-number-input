@@ -3,6 +3,7 @@ import "./style.scss";
 import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
 import { allCountries, Country } from "../assets/country-list";
+import { getSortingCountries } from "../services/utils/sorting-countries";
 
 interface Props {
     customAllCountries: Country[];
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const PhoneInput: React.FC<Props> = ({
-    defaultCountry,
+    defaultCountry = "ru",
     disabled,
     ignoredCountries,
     onlyCountries,
@@ -24,22 +25,36 @@ export const PhoneInput: React.FC<Props> = ({
     showFlags,
     showCountryCodeInList,
 }: Props) => {
+    const sortedCountries = getSortingCountries({
+        allCountries,
+        ignoredCountries,
+        onlyCountries,
+        preferredCountries,
+    });
+
+    const initialSelectedCountry =
+        sortedCountries.find(
+            country => country.alpha2 === defaultCountry.toUpperCase(),
+        ) || sortedCountries[0];
+
+    const [selectedCountry, setSelectedCountry] = React.useState<Country>(
+        initialSelectedCountry,
+    );
+
     return (
         <div className="react-tel-number-input">
             <div className="select-country-container">
                 <CountrySelector
-                    allCountries={allCountries}
-                    defaultCountry={defaultCountry}
+                    countries={sortedCountries}
                     disabled={disabled}
-                    ignoredCountries={ignoredCountries}
-                    onlyCountries={onlyCountries}
-                    preferredCountries={preferredCountries}
+                    selectedCountry={selectedCountry}
+                    setSelectedCountry={setSelectedCountry}
                     showFlags={showFlags}
                     showCountryCodeInList={showCountryCodeInList}
                 />
             </div>
             <div className="phone-input-container">
-                <Input />
+                <Input selectedCountry={selectedCountry} />
             </div>
         </div>
     );

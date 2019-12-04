@@ -16,6 +16,7 @@ export const ListItem: React.FC<Props> = ({
     const onClickHandler = (): void => {
         onClick(country);
     };
+
     return (
         <div className={"country-selector-list__item"} onClick={onClickHandler}>
             <div className={"country-selector-list__item__flag-container"}>
