@@ -6,6 +6,9 @@ import { Country } from "../../../assets/country-list";
 import "../../../assets/flags/flags.scss";
 import { ListItem } from "./list-item";
 import { KeyCode } from "../../../services/variables";
+import { Flag } from "./flag";
+import { scrollTo } from "../../../services/utils/scroll-to";
+import { useEffect } from "react";
 
 interface Props {
     countries: Country[];
@@ -16,6 +19,7 @@ interface Props {
     disabled: boolean;
     showFlags: boolean;
     showCountryCodeInList: boolean;
+    emojiFlags: boolean;
 }
 
 export const CountrySelector: React.FC<Props> = React.memo(
@@ -24,14 +28,24 @@ export const CountrySelector: React.FC<Props> = React.memo(
         selectedCountry,
         showCountryCodeInList = true,
         setSelectedCountry,
+        showFlags,
+        emojiFlags,
     }: Props) => {
+        const selectedCountryRef = React.useRef<HTMLDivElement>(null);
         const countryInputRef = React.useRef<HTMLInputElement>(null);
-        const countrySelectorRef = React.useRef<HTMLInputElement>(null);
+        const countryListRef = React.useRef<HTMLDivElement>(null);
+        const countrySelectorRef = React.useRef<HTMLDivElement>(null);
         const [isFocus, setFocus] = React.useState<boolean>(false);
 
         const onFocusHandler = (): void => {
             setFocus(true);
         };
+
+        useEffect(() => {
+            if (isFocus) {
+                scrollTo(countryListRef, selectedCountryRef);
+            }
+        }, [isFocus]);
 
         const onBlurHandler = (): void => {
             setFocus(false);
@@ -78,11 +92,14 @@ export const CountrySelector: React.FC<Props> = React.memo(
                     })}
                     onClick={onFocusHandler}
                 >
-                    <div className={"country-selector__flag"}>
-                        <div
-                            className={`iti__flag iti__${selectedCountry.alpha2.toLowerCase()}`}
-                        />
-                    </div>
+                    {showFlags && (
+                        <div className={"country-selector__flag"}>
+                            <Flag
+                                emojiFlags={emojiFlags}
+                                country={selectedCountry}
+                            />
+                        </div>
+                    )}
                     <input
                         ref={countryInputRef}
                         value={selectedCountry.alpha2}
@@ -102,16 +119,21 @@ export const CountrySelector: React.FC<Props> = React.memo(
                     </div>
                 </div>
                 <div
+                    ref={countryListRef}
                     className={cx("country-selector-list", {
                         "country-selector-list--is-focus": isFocus,
                     })}
                 >
                     {countries.map((country, index) => (
                         <ListItem
+                            selectedCountryRef={selectedCountryRef}
                             country={country}
                             key={`${country.alpha2 + index}`}
                             onClick={updateValue}
                             showCountryCodeInList={showCountryCodeInList}
+                            emojiFlags={emojiFlags}
+                            showFlags={showFlags}
+                            selectedCountry={selectedCountry}
                         />
                     ))}
                 </div>

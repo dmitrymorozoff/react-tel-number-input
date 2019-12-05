@@ -19,6 +19,7 @@
         border-radius: 4px 0 0 4px;
         padding: 5px 10px;
         box-sizing: border-box;
+        cursor: pointer;
 
         &--is-focus {
             border-color: $hover-color;
@@ -27,9 +28,6 @@
         &__flag {
             z-index: 1;
             cursor: pointer;
-            img {
-                position: absolute;
-            }
         }
 
         &__input {
@@ -106,6 +104,16 @@
 
                 &:hover {
                     background-color: $secondary-hover-color;
+                    color: inherit;
+                }
+
+                &--selected {
+                    background-color: $hover-color;
+                    color: #fff;
+                    &:hover {
+                        background-color: $hover-color;
+                        color: #fff;
+                    }
                 }
             }
         }
@@ -122,4 +130,8 @@
     .country-selector-code {
         margin-left: 5px;
     }
+}
+
+.emoji-flag {
+    font-size: 22px;
 }

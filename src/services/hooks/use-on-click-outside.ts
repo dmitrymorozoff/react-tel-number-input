@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import * as React from "react";
 
 interface Props {
-    ref: React.RefObject<HTMLInputElement>;
+    ref: React.RefObject<HTMLDivElement>;
     handler: any;
 }
 

@@ -3,7 +3,7 @@ import "./style.scss";
 import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
 import { allCountries, Country } from "../assets/country-list";
-import { getSortingCountries } from "../services/utils/sorting-countries";
+import { getSortingCountries } from "../services/utils/get-sorting-countries";
 
 interface Props {
     customAllCountries: Country[];
@@ -14,6 +14,7 @@ interface Props {
     preferredCountries: string[];
     showFlags: boolean;
     showCountryCodeInList: boolean;
+    emojiFlags: boolean;
 }
 
 export const PhoneInput: React.FC<Props> = ({
@@ -22,8 +23,9 @@ export const PhoneInput: React.FC<Props> = ({
     ignoredCountries,
     onlyCountries,
     preferredCountries,
-    showFlags,
-    showCountryCodeInList,
+    showFlags = true,
+    showCountryCodeInList = true,
+    emojiFlags = true,
 }: Props) => {
     const sortedCountries = getSortingCountries({
         allCountries,
@@ -51,6 +53,7 @@ export const PhoneInput: React.FC<Props> = ({
                     setSelectedCountry={setSelectedCountry}
                     showFlags={showFlags}
                     showCountryCodeInList={showCountryCodeInList}
+                    emojiFlags={emojiFlags}
                 />
             </div>
             <div className="phone-input-container">
