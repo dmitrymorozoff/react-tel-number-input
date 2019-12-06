@@ -1669,9 +1669,9 @@ export const allCountries: Country[] = [
     },
     {
         alpha2: "XK",
-        alpha3: "",
+        alpha3: "XKX",
         countryCallingCodes: ["+383"],
-        emoji: "",
+        emoji: "🇽🇰",
         name: "Kosovo",
     },
     {

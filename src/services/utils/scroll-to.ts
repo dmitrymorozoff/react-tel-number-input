@@ -2,7 +2,7 @@ import { RefObject } from "react";
 
 export const scrollTo = (
     containerRef: RefObject<HTMLDivElement>,
-    countryRef: RefObject<HTMLDivElement>,
+    countryRef: HTMLDivElement | null,
     middle?: boolean,
 ): void => {
     if (!containerRef) {
@@ -21,7 +21,7 @@ export const scrollTo = (
     const containerTop = containerOffset.top + document.body.scrollTop;
     const containerBottom = containerTop + containerHeight;
 
-    const country = countryRef.current;
+    const country = countryRef;
     if (!country) {
         return;
     }

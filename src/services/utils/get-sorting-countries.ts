@@ -69,23 +69,27 @@ export const getSortingCountries = ({
     onlyCountries = [],
     preferredCountries = [],
 }: Props): Country[] => {
-    const countires = getCountriesWithout(allCountries, ignoredCountries);
+    allCountries.sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+    });
+
+    const countries = getCountriesWithout(allCountries, ignoredCountries);
     if (!preferredCountries && !onlyCountries) {
-        return countires;
+        return countries;
     }
 
     if (preferredCountries.length !== 0) {
         if (onlyCountries.length !== 0) {
             const finalCountries = getCountriesIncludes(
-                countires,
+                countries,
                 onlyCountries,
             );
             return preferCountries(finalCountries, preferredCountries);
         }
-        return preferCountries(countires, preferredCountries);
+        return preferCountries(countries, preferredCountries);
     } else if (onlyCountries.length !== 0) {
-        return getCountriesIncludes(countires, onlyCountries);
+        return getCountriesIncludes(countries, onlyCountries);
     } else {
-        return countires;
+        return countries;
     }
 };

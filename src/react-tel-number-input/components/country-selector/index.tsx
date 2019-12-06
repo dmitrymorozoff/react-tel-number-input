@@ -8,9 +8,14 @@ import { ListItem } from "./list-item";
 import { KeyCode } from "../../../services/variables";
 import { Flag } from "./flag";
 import { scrollTo } from "../../../services/utils/scroll-to";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { RefObject } from "react";
+import { OnChangeCountry } from "../../index";
+import { getSelectedCountryIndex } from "../../../services/utils/get-selected-country-index";
+import { getHighlightCountryIndex } from "../../../services/utils/get-highlight-country-index";
 
 interface Props {
+    phoneInputRef: RefObject<HTMLInputElement>;
     countries: Country[];
     selectedCountry: Country;
     setSelectedCountry: (
@@ -20,6 +25,7 @@ interface Props {
     showFlags: boolean;
     showCountryCodeInList: boolean;
     emojiFlags: boolean;
+    onChangeCountry: OnChangeCountry;
 }
 
 export const CountrySelector: React.FC<Props> = React.memo(
@@ -30,8 +36,13 @@ export const CountrySelector: React.FC<Props> = React.memo(
         setSelectedCountry,
         showFlags,
         emojiFlags,
+        phoneInputRef,
+        onChangeCountry,
     }: Props) => {
-        const selectedCountryRef = React.useRef<HTMLDivElement>(null);
+        const [selectedCountryIndex, setSelectedCountryIndex] = useState(
+            getSelectedCountryIndex(countries, selectedCountry),
+        );
+        const countryItemRefs = React.useRef<(HTMLDivElement | null)[]>([]);
         const countryInputRef = React.useRef<HTMLInputElement>(null);
         const countryListRef = React.useRef<HTMLDivElement>(null);
         const countrySelectorRef = React.useRef<HTMLDivElement>(null);
@@ -43,33 +54,52 @@ export const CountrySelector: React.FC<Props> = React.memo(
 
         useEffect(() => {
             if (isFocus) {
-                scrollTo(countryListRef, selectedCountryRef);
+                scrollTo(
+                    countryListRef,
+                    countryItemRefs.current[selectedCountryIndex],
+                );
             }
-        }, [isFocus]);
+        }, [isFocus, selectedCountryIndex]);
 
-        const onBlurHandler = (): void => {
-            setFocus(false);
+        const move = (direction: -1 | 1): void => {
+            const newSelectedCountryIndex = getHighlightCountryIndex(
+                direction,
+                selectedCountryIndex,
+                countries,
+            );
+            setSelectedCountryIndex(newSelectedCountryIndex);
         };
-
-        useOnClickOutside({
-            ref: countrySelectorRef,
-            handler: () => onBlurHandler(),
-        });
 
         const closeListHandler = (): void => {
             setFocus(false);
+            setSelectedCountryIndex(
+                getSelectedCountryIndex(countries, selectedCountry),
+            );
+            // phoneInputRef.current?.focus();
         };
 
         const updateValue = (country: Country): void => {
             countryInputRef.current?.blur();
-            closeListHandler();
             setSelectedCountry(country);
+            onChangeCountry(country);
+            closeListHandler();
+            setSelectedCountryIndex(
+                getSelectedCountryIndex(countries, country),
+            );
         };
 
         const keyDownHandler = (
             event: React.KeyboardEvent<HTMLDivElement>,
         ): void => {
-            const code = event.keyCode;
+            const code = event.which;
+            event.preventDefault();
+            
+            if (code === KeyCode.Up) {
+                move(-1);
+            }
+            if (code === KeyCode.Down) {
+                move(1);
+            }
             if (code === KeyCode.Escape) {
                 closeListHandler();
             }
@@ -79,6 +109,11 @@ export const CountrySelector: React.FC<Props> = React.memo(
                 }
             }
         };
+
+        useOnClickOutside({
+            ref: countrySelectorRef,
+            handler: () => closeListHandler(),
+        });
 
         return (
             <div
@@ -90,6 +125,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
                     className={cx("country-selector", {
                         "country-selector--is-focus": isFocus,
                     })}
+                    tabIndex={0}
                     onClick={onFocusHandler}
                 >
                     {showFlags && (
@@ -126,14 +162,15 @@ export const CountrySelector: React.FC<Props> = React.memo(
                 >
                     {countries.map((country, index) => (
                         <ListItem
-                            selectedCountryRef={selectedCountryRef}
+                            countryItemRefs={countryItemRefs}
                             country={country}
                             key={`${country.alpha2 + index}`}
                             onClick={updateValue}
                             showCountryCodeInList={showCountryCodeInList}
                             emojiFlags={emojiFlags}
                             showFlags={showFlags}
-                            selectedCountry={selectedCountry}
+                            selectedCountryIndex={selectedCountryIndex}
+                            index={index}
                         />
                     ))}
                 </div>
