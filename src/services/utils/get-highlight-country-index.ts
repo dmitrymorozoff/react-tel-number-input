@@ -9,8 +9,8 @@ export const getHighlightCountryIndex = (
     if (newHighlightCountryIndex <= 0) {
         return 0;
     }
-    if (newHighlightCountryIndex >= countries.length) {
-        return countries.length;
+    if (newHighlightCountryIndex >= countries.length - 1) {
+        return countries.length - 1;
     }
     return newHighlightCountryIndex;
 };

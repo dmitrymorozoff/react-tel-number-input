@@ -3,41 +3,39 @@ import "../style.scss";
 import { Country } from "src/assets/country-list";
 import { Flag } from "../flag";
 import cx from "classnames";
-import { MutableRefObject } from "react";
+import { MutableRefObject, useCallback } from "react";
 
 interface Props {
     country: Country;
-    selectedCountryIndex: number;
+    isSelected: boolean;
     onClick: (country: Country) => void;
     showCountryCodeInList: boolean;
     showFlags: boolean;
     emojiFlags: boolean;
     countryItemRefs: MutableRefObject<(HTMLDivElement | null)[]>;
-    index: number;
 }
 
 export const ListItem: React.FC<Props> = React.memo(
     ({
         country,
-        selectedCountryIndex,
         onClick,
-        showCountryCodeInList = true,
+        showCountryCodeInList,
         showFlags,
         emojiFlags,
         countryItemRefs,
-        index,
+        isSelected,
     }: Props) => {
-        const onClickHandler = (): void => {
+        const onClickHandler = useCallback((): void => {
             onClick(country);
-        };
+        }, []);
 
-        const isSelected = index === selectedCountryIndex;
-
-        console.log("render");
+        const setCountryItemsRefs = useCallback((ref: HTMLDivElement): void => {
+            countryItemRefs.current.push(ref);
+        }, []);
 
         return (
             <div
-                ref={(ref: HTMLDivElement) => countryItemRefs.current.push(ref)}
+                ref={setCountryItemsRefs}
                 className={cx("country-selector-list__item", {
                     "country-selector-list__item--selected": isSelected,
                 })}

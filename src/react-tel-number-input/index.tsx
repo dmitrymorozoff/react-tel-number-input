@@ -4,7 +4,8 @@ import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
 import { allCountries, Country } from "../assets/country-list";
 import { getSortingCountries } from "../services/utils/get-sorting-countries";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
+import { isEmpty } from "../services/utils/isEmpty";
 
 export type OnChangeInput = (
     value: string,
@@ -21,6 +22,8 @@ interface Props {
     customAllCountries: Country[];
     defaultCountry: string;
     disabled: boolean;
+    disabledSelector: boolean;
+    disabledInput: boolean;
     ignoredCountries: string[];
     onlyCountries: string[];
     preferredCountries: string[];
@@ -30,24 +33,56 @@ interface Props {
     placeholder: string;
     onChange: () => void;
     disableExamplePlaceholder: boolean;
+    autoFocus: boolean;
 }
 
 export const PhoneInput: React.FC<Props> = ({
+    customAllCountries = [
+        {
+            alpha2: "AR",
+            alpha3: "ARG",
+            countryCallingCodes: ["+54"],
+            emoji: "🇦🇷",
+            name: "Argentina",
+            props: {
+                hello: "testt",
+            },
+        },
+        {
+            alpha2: "AS",
+            alpha3: "ASM",
+            countryCallingCodes: ["+1684"],
+            emoji: "🇦🇸",
+            name: "American Samoa",
+        },
+        {
+            alpha2: "AT",
+            alpha3: "AUT",
+            countryCallingCodes: ["+43"],
+            emoji: "🇦🇹",
+            name: "Austria",
+        },
+    ],
     defaultCountry = "ru",
-    disabled,
-    ignoredCountries,
-    onlyCountries,
-    preferredCountries,
+    disabled = false,
+    disabledSelector = false,
+    disabledInput = false,
+    ignoredCountries = [],
+    onlyCountries = [],
+    preferredCountries = [],
     showFlags = true,
     showCountryCodeInList = true,
     emojiFlags = true,
-    placeholder,
+    placeholder = "",
     onChange,
     disableExamplePlaceholder = false,
+    autoFocus = false,
 }: Props) => {
     const phoneInputRef = React.useRef<HTMLInputElement>(null);
     const sortedCountries = getSortingCountries({
-        allCountries,
+        allCountries: isEmpty(customAllCountries)
+            ? allCountries
+            : customAllCountries,
         ignoredCountries,
         onlyCountries,
         preferredCountries,
@@ -64,16 +99,16 @@ export const PhoneInput: React.FC<Props> = ({
         initialSelectedCountry,
     );
 
-    const onChangeCountry: OnChangeCountry = value => {
+    const onChangeCountry: OnChangeCountry = useCallback(value => {
         console.log("change country", value);
         setPayload({
             country: value,
         });
-    };
+    }, []);
 
-    const onChangeInput: OnChangeInput = (value, event) => {
+    const onChangeInput: OnChangeInput = useCallback((value, event) => {
         console.log("change input", value, event);
-    };
+    }, []);
 
     console.log("payload", payload);
 
@@ -83,6 +118,7 @@ export const PhoneInput: React.FC<Props> = ({
                 <CountrySelector
                     countries={sortedCountries}
                     disabled={disabled}
+                    disabledSelector={disabledSelector}
                     selectedCountry={selectedCountry}
                     setSelectedCountry={setSelectedCountry}
                     showFlags={showFlags}
@@ -94,11 +130,14 @@ export const PhoneInput: React.FC<Props> = ({
             </div>
             <div className="phone-input-container">
                 <Input
+                    autoFocus={autoFocus}
                     selectedCountry={selectedCountry}
                     phoneInputRef={phoneInputRef}
                     placeholder={placeholder}
                     onChangeInput={onChangeInput}
                     disableExamplePlaceholder={disableExamplePlaceholder}
+                    disabled={disabled}
+                    disabledInput={disabledInput}
                 />
             </div>
         </div>

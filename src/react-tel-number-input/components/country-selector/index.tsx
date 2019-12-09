@@ -8,11 +8,12 @@ import { ListItem } from "./list-item";
 import { KeyCode } from "../../../services/variables";
 import { Flag } from "./flag";
 import { scrollTo } from "../../../services/utils/scroll-to";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RefObject } from "react";
 import { OnChangeCountry } from "../../index";
 import { getSelectedCountryIndex } from "../../../services/utils/get-selected-country-index";
 import { getHighlightCountryIndex } from "../../../services/utils/get-highlight-country-index";
+import { isEmpty } from "../../../services/utils/isEmpty";
 
 interface Props {
     phoneInputRef: RefObject<HTMLInputElement>;
@@ -22,6 +23,7 @@ interface Props {
         value: ((prevState: Country) => Country) | Country,
     ) => void;
     disabled: boolean;
+    disabledSelector: boolean;
     showFlags: boolean;
     showCountryCodeInList: boolean;
     emojiFlags: boolean;
@@ -38,6 +40,8 @@ export const CountrySelector: React.FC<Props> = React.memo(
         emojiFlags,
         phoneInputRef,
         onChangeCountry,
+        disabled,
+        disabledSelector,
     }: Props) => {
         const [selectedCountryIndex, setSelectedCountryIndex] = useState(
             getSelectedCountryIndex(countries, selectedCountry),
@@ -47,10 +51,6 @@ export const CountrySelector: React.FC<Props> = React.memo(
         const countryListRef = React.useRef<HTMLDivElement>(null);
         const countrySelectorRef = React.useRef<HTMLDivElement>(null);
         const [isFocus, setFocus] = React.useState<boolean>(false);
-
-        const onFocusHandler = (): void => {
-            setFocus(true);
-        };
 
         useEffect(() => {
             if (isFocus) {
@@ -70,15 +70,16 @@ export const CountrySelector: React.FC<Props> = React.memo(
             setSelectedCountryIndex(newSelectedCountryIndex);
         };
 
-        const closeListHandler = (): void => {
+        const closeListHandler = useCallback((): void => {
             setFocus(false);
             setSelectedCountryIndex(
                 getSelectedCountryIndex(countries, selectedCountry),
             );
-            // phoneInputRef.current?.focus();
-        };
+            console.log("focus", phoneInputRef);
+            phoneInputRef.current?.focus();
+        }, []);
 
-        const updateValue = (country: Country): void => {
+        const updateValue = useCallback((country: Country): void => {
             countryInputRef.current?.blur();
             setSelectedCountry(country);
             onChangeCountry(country);
@@ -86,14 +87,13 @@ export const CountrySelector: React.FC<Props> = React.memo(
             setSelectedCountryIndex(
                 getSelectedCountryIndex(countries, country),
             );
-        };
+        }, []);
 
         const keyDownHandler = (
             event: React.KeyboardEvent<HTMLDivElement>,
         ): void => {
             const code = event.which;
-            event.preventDefault();
-            
+
             if (code === KeyCode.Up) {
                 move(-1);
             }
@@ -104,16 +104,23 @@ export const CountrySelector: React.FC<Props> = React.memo(
                 closeListHandler();
             }
             if (code === KeyCode.Tab) {
-                if (isFocus) {
-                    closeListHandler();
-                }
+                setFocus(false);
             }
         };
 
+        const closeHandler = useCallback(() => closeListHandler(), []);
+
         useOnClickOutside({
             ref: countrySelectorRef,
-            handler: () => closeListHandler(),
+            handler: closeHandler,
         });
+
+        const onFocusHandler = (): void => {
+            if (disabled || disabledSelector) {
+                return;
+            }
+            setFocus(true);
+        };
 
         return (
             <div
@@ -132,13 +139,18 @@ export const CountrySelector: React.FC<Props> = React.memo(
                         <div className={"country-selector__flag"}>
                             <Flag
                                 emojiFlags={emojiFlags}
-                                country={selectedCountry}
+                                country={selectedCountry || null}
                             />
                         </div>
                     )}
                     <input
                         ref={countryInputRef}
-                        value={selectedCountry.alpha2}
+                        value={
+                            !isEmpty(selectedCountry)
+                                ? selectedCountry.alpha2
+                                : undefined
+                        }
+                        disabled={disabled || disabledSelector}
                         type="text"
                         className={cx("country-selector__input", {
                             "country-selector__input--is-focus": isFocus,
@@ -160,19 +172,22 @@ export const CountrySelector: React.FC<Props> = React.memo(
                         "country-selector-list--is-focus": isFocus,
                     })}
                 >
-                    {countries.map((country, index) => (
-                        <ListItem
-                            countryItemRefs={countryItemRefs}
-                            country={country}
-                            key={`${country.alpha2 + index}`}
-                            onClick={updateValue}
-                            showCountryCodeInList={showCountryCodeInList}
-                            emojiFlags={emojiFlags}
-                            showFlags={showFlags}
-                            selectedCountryIndex={selectedCountryIndex}
-                            index={index}
-                        />
-                    ))}
+                    {countries.map((country, index) => {
+                        const isSelected = index === selectedCountryIndex;
+
+                        return (
+                            <ListItem
+                                countryItemRefs={countryItemRefs}
+                                country={country}
+                                key={`${country.alpha2}`}
+                                onClick={updateValue}
+                                showCountryCodeInList={showCountryCodeInList}
+                                emojiFlags={emojiFlags}
+                                showFlags={showFlags}
+                                isSelected={isSelected}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         );
