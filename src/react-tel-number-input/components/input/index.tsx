@@ -6,6 +6,11 @@ import { ChangeEvent, RefObject, useCallback } from "react";
 import { OnChangeInput } from "../../index";
 import { getPlaceholderValue } from "../../../services/utils/get-placeholder-value";
 import { isEmpty } from "../../../services/utils/isEmpty";
+import {
+    CountryCode,
+    parsePhoneNumberFromString,
+    PhoneNumber,
+} from "libphonenumber-js";
 
 interface Props {
     selectedCountry: Country;
@@ -31,6 +36,9 @@ export const Input: React.FC<Props> = React.memo(
     }: Props) => {
         const [isFocus, setFocus] = React.useState<boolean>(false);
         const [value, setValue] = React.useState<string>("");
+        const [parsedValue, setParsedValue] = React.useState<
+            PhoneNumber | undefined
+        >(undefined);
         const onFocusHandler = useCallback((): void => {
             if (disabled || disabledInput) {
                 return;
@@ -50,7 +58,12 @@ export const Input: React.FC<Props> = React.memo(
 
             if (targetValue === "" || regExp.test(targetValue)) {
                 setValue(targetValue);
-                onChangeInput(targetValue, event);
+                const parsedPhoneNumber = parsePhoneNumberFromString(
+                    targetValue,
+                    selectedCountry.alpha2 as CountryCode,
+                );
+                setParsedValue(parsedPhoneNumber);
+                onChangeInput({ targetValue, parsedPhoneNumber }, event);
             }
         };
 
@@ -66,6 +79,7 @@ export const Input: React.FC<Props> = React.memo(
             <div
                 className={cx("phone-input", {
                     "phone-input--is-focus": isFocus,
+                    "phone-input--is-valid": parsedValue?.isValid(),
                 })}
                 onClick={onFocusHandler}
             >

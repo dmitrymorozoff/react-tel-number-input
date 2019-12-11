@@ -70,24 +70,26 @@ export const CountrySelector: React.FC<Props> = React.memo(
             setSelectedCountryIndex(newSelectedCountryIndex);
         };
 
-        const closeListHandler = useCallback((): void => {
-            setFocus(false);
-            setSelectedCountryIndex(
-                getSelectedCountryIndex(countries, selectedCountry),
-            );
-            console.log("focus", phoneInputRef);
-            phoneInputRef.current?.focus();
-        }, []);
+        const closeListHandler = useCallback(
+            (newSelectedCountry: Country): void => {
+                setFocus(false);
+                setSelectedCountryIndex(
+                    getSelectedCountryIndex(
+                        countries,
+                        newSelectedCountry || selectedCountry,
+                    ),
+                );
+                phoneInputRef.current?.focus();
+            },
+            [],
+        );
 
-        const updateValue = useCallback((country: Country): void => {
+        const updateValue = (country: Country): void => {
             countryInputRef.current?.blur();
-            setSelectedCountry(country);
+            setSelectedCountry(country || selectedCountry);
             onChangeCountry(country);
-            closeListHandler();
-            setSelectedCountryIndex(
-                getSelectedCountryIndex(countries, country),
-            );
-        }, []);
+            closeListHandler(country);
+        };
 
         const keyDownHandler = (
             event: React.KeyboardEvent<HTMLDivElement>,
@@ -101,19 +103,12 @@ export const CountrySelector: React.FC<Props> = React.memo(
                 move(1);
             }
             if (code === KeyCode.Escape) {
-                closeListHandler();
+                closeListHandler(selectedCountry);
             }
             if (code === KeyCode.Tab) {
                 setFocus(false);
             }
         };
-
-        const closeHandler = useCallback(() => closeListHandler(), []);
-
-        useOnClickOutside({
-            ref: countrySelectorRef,
-            handler: closeHandler,
-        });
 
         const onFocusHandler = (): void => {
             if (disabled || disabledSelector) {
@@ -121,6 +116,15 @@ export const CountrySelector: React.FC<Props> = React.memo(
             }
             setFocus(true);
         };
+
+        const onBlurHandler = (): void => {
+            setFocus(false);
+        };
+
+        useOnClickOutside({
+            ref: countrySelectorRef,
+            handler: onBlurHandler,
+        });
 
         return (
             <div

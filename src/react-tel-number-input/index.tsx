@@ -6,16 +6,23 @@ import { allCountries, Country } from "../assets/country-list";
 import { getSortingCountries } from "../services/utils/get-sorting-countries";
 import { ChangeEvent, useCallback, useState } from "react";
 import { isEmpty } from "../services/utils/isEmpty";
+import { PhoneNumber } from "libphonenumber-js";
+
+type InputPhoneNumber = {
+    parsedPhoneNumber: PhoneNumber | undefined;
+    targetValue: string;
+};
 
 export type OnChangeInput = (
-    value: string,
+    value: InputPhoneNumber,
     event: ChangeEvent<HTMLInputElement>,
 ) => void;
 
 export type OnChangeCountry = (value: Country) => void;
 
 export interface Payload {
-    country: Country;
+    country: Country | undefined;
+    phoneNumber: InputPhoneNumber | undefined;
 }
 
 interface Props {
@@ -37,32 +44,7 @@ interface Props {
 }
 
 export const PhoneInput: React.FC<Props> = ({
-    customAllCountries = [
-        {
-            alpha2: "AR",
-            alpha3: "ARG",
-            countryCallingCodes: ["+54"],
-            emoji: "🇦🇷",
-            name: "Argentina",
-            props: {
-                hello: "testt",
-            },
-        },
-        {
-            alpha2: "AS",
-            alpha3: "ASM",
-            countryCallingCodes: ["+1684"],
-            emoji: "🇦🇸",
-            name: "American Samoa",
-        },
-        {
-            alpha2: "AT",
-            alpha3: "AUT",
-            countryCallingCodes: ["+43"],
-            emoji: "🇦🇹",
-            name: "Austria",
-        },
-    ],
+    customAllCountries,
     defaultCountry = "ru",
     disabled = false,
     disabledSelector = false,
@@ -88,8 +70,6 @@ export const PhoneInput: React.FC<Props> = ({
         preferredCountries,
     });
 
-    const [payload, setPayload] = useState<Payload>();
-
     const initialSelectedCountry =
         sortedCountries.find(
             country => country.alpha2 === defaultCountry.toUpperCase(),
@@ -99,16 +79,28 @@ export const PhoneInput: React.FC<Props> = ({
         initialSelectedCountry,
     );
 
-    const onChangeCountry: OnChangeCountry = useCallback(value => {
-        console.log("change country", value);
+    const [payload, setPayload] = useState<Payload>({
+        country: selectedCountry,
+        phoneNumber: undefined,
+    });
+
+    const onChangeCountry: OnChangeCountry = value => {
+        setSelectedCountry(value);
         setPayload({
+            ...payload,
             country: value,
         });
-    }, []);
+    };
 
-    const onChangeInput: OnChangeInput = useCallback((value, event) => {
-        console.log("change input", value, event);
-    }, []);
+    const onChangeInput: OnChangeInput = useCallback(
+        (value, event) => {
+            setPayload({
+                ...payload,
+                phoneNumber: value,
+            });
+        },
+        [payload],
+    );
 
     console.log("payload", payload);
 
