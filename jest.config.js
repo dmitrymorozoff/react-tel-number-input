@@ -1,18 +1,13 @@
-const TEST_REGEX = "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|js?|tsx?|ts?)$";
-
-module.exports = {
-    setupFiles: ["<rootDir>/jest.setup.js"],
-    snapshotSerializers: ["<rootDir>/node_modules/enzyme-to-json/serializer"],
-    globals: {
-        "ts-jest": {
-            // useBabelrc: true,
-            tsConfigFile: "tsconfig.jest.json",
-        },
-    },
-    testRegex: TEST_REGEX,
+module.export = {
+    roots: ["<rootDir>/src"],
     transform: {
-        "^.+\\.tsx?$": "ts-jest",
+        "\\.(js|jsx|ts|tsx)?$": "babel-jest",
     },
-    testPathIgnorePatterns: ["<rootDir>/node_modules/"],
-    moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+    testMatch: ["<rootDir>/src/**/>(*.)test.{js, jsx, ts, tsx}"],
+    moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+    testPathIgnorePatterns: ["/node_modules/", "/public/"],
+    setupFilesAfterEnv: [
+        "jest-dom/extend-expect",
+        "@testing-library/react/cleanup-after-each",
+    ],
 };

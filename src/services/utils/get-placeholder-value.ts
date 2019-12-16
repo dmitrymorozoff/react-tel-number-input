@@ -5,8 +5,8 @@ import { CountryCode, getExampleNumber } from "libphonenumber-js";
 
 export const getPlaceholderValue = (
     country: Country,
-    disableExamplePlaceholder: boolean,
-    placeholder: string,
+    disableExamplePlaceholder?: boolean,
+    placeholder?: string,
 ): string => {
     const code = country.alpha2 as CountryCode;
     const phoneNumber = code ? getExampleNumber(code, examples) : null;

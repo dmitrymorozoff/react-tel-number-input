@@ -1,4 +1,4 @@
-import React = require("react");
+import * as React from "react";
 import "./style.scss";
 import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
@@ -26,21 +26,21 @@ export interface Payload {
 }
 
 interface Props {
-    customAllCountries: Country[];
-    defaultCountry: string;
-    disabled: boolean;
-    disabledSelector: boolean;
-    disabledInput: boolean;
-    ignoredCountries: string[];
-    onlyCountries: string[];
-    preferredCountries: string[];
-    showFlags: boolean;
-    showCountryCodeInList: boolean;
-    emojiFlags: boolean;
-    placeholder: string;
-    onChange: () => void;
-    disableExamplePlaceholder: boolean;
-    autoFocus: boolean;
+    customAllCountries?: Country[];
+    defaultCountry?: string;
+    disabled?: boolean;
+    disabledSelector?: boolean;
+    disabledInput?: boolean;
+    ignoredCountries?: string[];
+    onlyCountries?: string[];
+    preferredCountries?: string[];
+    showFlags?: boolean;
+    showCountryCodeInList?: boolean;
+    emojiFlags?: boolean;
+    placeholder?: string;
+    onChange?: () => void;
+    disableExamplePlaceholder?: boolean;
+    autoFocus?: boolean;
 }
 
 export const PhoneInput: React.FC<Props> = ({
@@ -64,7 +64,7 @@ export const PhoneInput: React.FC<Props> = ({
     const sortedCountries = getSortingCountries({
         allCountries: isEmpty(customAllCountries)
             ? allCountries
-            : customAllCountries,
+            : (customAllCountries as Country[]),
         ignoredCountries,
         onlyCountries,
         preferredCountries,

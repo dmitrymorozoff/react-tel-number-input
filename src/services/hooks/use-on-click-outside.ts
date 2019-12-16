@@ -9,7 +9,6 @@ interface Props {
 export const useOnClickOutside = ({ ref, handler }: Props): void => {
     useEffect(() => {
         const listener = (event: any): void => {
-            // Do nothing if clicking ref's element or descendent elements
             if (!ref.current || ref.current.contains(event.target)) {
                 return;
             }

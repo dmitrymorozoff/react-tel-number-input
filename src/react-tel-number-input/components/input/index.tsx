@@ -1,4 +1,4 @@
-import React = require("react");
+import * as React from "react";
 import cx from "classnames";
 import "./style.scss";
 import { Country } from "../../../assets/country-list";

@@ -2,10 +2,10 @@ import { Country } from "../../assets/country-list";
 
 export const getHighlightCountryIndex = (
     direction: number,
-    selectedCountryIndex: number,
+    currentSelectedCountryIndex: number,
     countries: Country[],
 ): number => {
-    const newHighlightCountryIndex = selectedCountryIndex + direction;
+    const newHighlightCountryIndex = currentSelectedCountryIndex + direction;
     if (newHighlightCountryIndex <= 0) {
         return 0;
     }
