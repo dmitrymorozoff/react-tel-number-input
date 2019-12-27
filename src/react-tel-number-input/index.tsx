@@ -31,6 +31,7 @@ interface Props {
     disabled?: boolean;
     disabledSelector?: boolean;
     disabledInput?: boolean;
+    showMask?: boolean;
     ignoredCountries?: string[];
     onlyCountries?: string[];
     preferredCountries?: string[];
@@ -49,6 +50,7 @@ export const PhoneInput: React.FC<Props> = ({
     disabled = false,
     disabledSelector = false,
     disabledInput = false,
+    showMask = true,
     ignoredCountries = [],
     onlyCountries = [],
     preferredCountries = [],
@@ -122,6 +124,7 @@ export const PhoneInput: React.FC<Props> = ({
             </div>
             <div className="phone-input-container">
                 <Input
+                    showMask={showMask}
                     autoFocus={autoFocus}
                     selectedCountry={selectedCountry}
                     phoneInputRef={phoneInputRef}

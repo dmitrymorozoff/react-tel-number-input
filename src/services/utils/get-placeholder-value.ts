@@ -8,6 +8,9 @@ export const getPlaceholderValue = (
     disableExamplePlaceholder?: boolean,
     placeholder?: string,
 ): string => {
+    if (!country) {
+        return "";
+    }
     const code = country.alpha2 as CountryCode;
     const phoneNumber = code ? getExampleNumber(code, examples) : null;
     const examplePlaceholder = phoneNumber

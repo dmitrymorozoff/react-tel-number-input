@@ -11,6 +11,8 @@ import {
     parsePhoneNumberFromString,
     PhoneNumber,
 } from "libphonenumber-js";
+import InputMask from "react-input-mask";
+import { getMask } from "../../../services/utils/get-mask";
 
 interface Props {
     selectedCountry: Country;
@@ -21,6 +23,7 @@ interface Props {
     autoFocus: boolean;
     disabled: boolean;
     disabledInput: boolean;
+    showMask: boolean;
 }
 
 export const Input: React.FC<Props> = React.memo(
@@ -29,6 +32,7 @@ export const Input: React.FC<Props> = React.memo(
         phoneInputRef,
         placeholder,
         onChangeInput,
+        showMask,
         disableExamplePlaceholder,
         autoFocus,
         disabled,
@@ -39,6 +43,7 @@ export const Input: React.FC<Props> = React.memo(
         const [parsedValue, setParsedValue] = React.useState<
             PhoneNumber | undefined
         >(undefined);
+
         const onFocusHandler = useCallback((): void => {
             if (disabled || disabledInput) {
                 return;
@@ -53,27 +58,23 @@ export const Input: React.FC<Props> = React.memo(
         const changeInputHandler = (
             event: ChangeEvent<HTMLInputElement>,
         ): void => {
-            const regExp = /^[0-9\b]+$/;
             const targetValue = event.target.value;
 
-            if (targetValue === "" || regExp.test(targetValue)) {
-                setValue(targetValue);
-                const parsedPhoneNumber = parsePhoneNumberFromString(
-                    targetValue,
-                    selectedCountry.alpha2 as CountryCode,
-                );
-                setParsedValue(parsedPhoneNumber);
-                onChangeInput({ targetValue, parsedPhoneNumber }, event);
-            }
+            setValue(targetValue);
+            const parsedPhoneNumber = parsePhoneNumberFromString(
+                targetValue,
+                selectedCountry.alpha2 as CountryCode,
+            );
+            setParsedValue(parsedPhoneNumber);
+            onChangeInput({ targetValue, parsedPhoneNumber }, event);
         };
 
-        const placeholderValue = selectedCountry
-            ? getPlaceholderValue(
-                  selectedCountry,
-                  disableExamplePlaceholder,
-                  placeholder,
-              )
-            : "";
+        const placeholderValue = getPlaceholderValue(
+            selectedCountry,
+            disableExamplePlaceholder,
+            placeholder,
+        );
+        const mask = getMask(placeholderValue, showMask);
 
         return (
             <div
@@ -88,13 +89,14 @@ export const Input: React.FC<Props> = React.memo(
                         className={"phone-input-dial-code"}
                     >{`(${selectedCountry.countryCallingCodes[0]})`}</div>
                 )}
-                <input
-                    ref={phoneInputRef}
+                <InputMask
+                    mask={mask}
+                    maskChar="_"
+                    value={value}
                     type="tel"
                     className={cx("phone-input__input", {
                         "phone-input__input--is-focus": isFocus,
                     })}
-                    value={value}
                     disabled={disabled || disabledInput}
                     autoFocus={autoFocus}
                     placeholder={placeholderValue}
@@ -102,7 +104,11 @@ export const Input: React.FC<Props> = React.memo(
                     onFocus={onFocusHandler}
                     onBlur={onBlurHandler}
                     onChange={changeInputHandler}
-                />
+                >
+                    {inputProps => (
+                        <input {...inputProps} ref={phoneInputRef} />
+                    )}
+                </InputMask>
             </div>
         );
     },
