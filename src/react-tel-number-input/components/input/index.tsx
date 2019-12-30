@@ -66,7 +66,17 @@ export const Input: React.FC<Props> = React.memo(
                 selectedCountry.alpha2 as CountryCode,
             );
             setParsedValue(parsedPhoneNumber);
-            onChangeInput({ targetValue, parsedPhoneNumber }, event);
+            onChangeInput({
+                targetValue,
+                countryCallingCode: parsedPhoneNumber?.countryCallingCode,
+                formattedNumber: parsedPhoneNumber?.number,
+                nationalNumber: parsedPhoneNumber?.nationalNumber,
+                isValid: parsedPhoneNumber?.isValid(),
+                formatInternational: parsedPhoneNumber?.formatInternational(),
+                formatNational: parsedPhoneNumber?.formatNational(),
+                uri: parsedPhoneNumber?.getURI(),
+                e164: parsedPhoneNumber?.format("E.164"),
+            });
         };
 
         const placeholderValue = getPlaceholderValue(

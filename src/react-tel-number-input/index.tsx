@@ -6,61 +6,75 @@ import { allCountries, Country } from "../assets/country-list";
 import { getSortingCountries } from "../services/utils/get-sorting-countries";
 import { ChangeEvent, useCallback, useState } from "react";
 import { isEmpty } from "../services/utils/isEmpty";
-import { PhoneNumber } from "libphonenumber-js";
+import {
+    CountryCallingCode,
+    E164Number,
+    NationalNumber,
+} from "libphonenumber-js";
 
-type InputPhoneNumber = {
-    parsedPhoneNumber: PhoneNumber | undefined;
+export interface PhoneNumber {
     targetValue: string;
-};
+    countryCallingCode?: CountryCallingCode;
+    formattedNumber?: E164Number;
+    nationalNumber?: NationalNumber;
+    isValid?: boolean;
+    formatInternational?: string;
+    formatNational?: string;
+    uri?: string;
+    e164?: string;
+}
 
-export type OnChangeInput = (
-    value: InputPhoneNumber,
-    event: ChangeEvent<HTMLInputElement>,
-) => void;
+export type OnChangeInput = (value: PhoneNumber) => void;
 
 export type OnChangeCountry = (value: Country) => void;
 
 export interface Payload {
     country: Country | undefined;
-    phoneNumber: InputPhoneNumber | undefined;
+    phoneNumber: PhoneNumber | undefined;
 }
 
 interface Props {
+    autoFocus?: boolean;
     customAllCountries?: Country[];
     defaultCountry?: string;
-    disabled?: boolean;
-    disabledSelector?: boolean;
-    disabledInput?: boolean;
-    showMask?: boolean;
-    ignoredCountries?: string[];
-    onlyCountries?: string[];
-    preferredCountries?: string[];
-    showFlags?: boolean;
-    showCountryCodeInList?: boolean;
-    emojiFlags?: boolean;
-    placeholder?: string;
-    onChange?: () => void;
     disableExamplePlaceholder?: boolean;
-    autoFocus?: boolean;
+    disabled?: boolean;
+    disabledInput?: boolean;
+    disabledSelector?: boolean;
+    emojiFlags?: boolean;
+    ignoredCountries?: string[];
+    value?: string;
+    onChange?: () => void;
+    onSelectCountry?: () => void;
+    onPhoneInputChange?: () => void;
+    onlyCountries?: string[];
+    placeholder?: string;
+    preferredCountries?: string[];
+    showCountryCodeInList?: boolean;
+    showFlags?: boolean;
+    showMask?: boolean;
 }
 
 export const PhoneInput: React.FC<Props> = ({
+    autoFocus = false,
     customAllCountries,
     defaultCountry = "ru",
-    disabled = false,
-    disabledSelector = false,
-    disabledInput = false,
-    showMask = true,
-    ignoredCountries = [],
-    onlyCountries = [],
-    preferredCountries = [],
-    showFlags = true,
-    showCountryCodeInList = true,
-    emojiFlags = true,
-    placeholder = "",
-    onChange,
     disableExamplePlaceholder = false,
-    autoFocus = false,
+    disabled = false,
+    disabledInput = false,
+    disabledSelector = false,
+    emojiFlags = true,
+    ignoredCountries = [],
+    value,
+    onChange,
+    onSelectCountry,
+    onPhoneInputChange,
+    onlyCountries = [],
+    placeholder = "",
+    preferredCountries = [],
+    showCountryCodeInList = true,
+    showFlags = true,
+    showMask = true,
 }: Props) => {
     const phoneInputRef = React.useRef<HTMLInputElement>(null);
     const sortedCountries = getSortingCountries({
@@ -95,7 +109,7 @@ export const PhoneInput: React.FC<Props> = ({
     };
 
     const onChangeInput: OnChangeInput = useCallback(
-        (value, event) => {
+        value => {
             setPayload({
                 ...payload,
                 phoneNumber: value,
