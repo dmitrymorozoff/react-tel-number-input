@@ -1,9 +1,9 @@
 import * as React from "react";
 import cx from "classnames";
 import "./style.scss";
+import "../../../assets/flags/flags.scss";
 import { useOnClickOutside } from "../../../services/hooks/use-on-click-outside";
 import { Country } from "../../../assets/country-list";
-import "../../../assets/flags/flags.scss";
 import { ListItem } from "./list-item";
 import { KeyCode } from "../../../services/variables";
 import { Flag } from "./flag";
@@ -13,6 +13,7 @@ import { RefObject } from "react";
 import { OnChangeCountry } from "../../index";
 import { getSelectedCountryIndex } from "../../../services/utils/get-selected-country-index";
 import { getHighlightCountryIndex } from "../../../services/utils/get-highlight-country-index";
+import { getSearchCountryIndex } from "../../../services/utils/get-search-country";
 import { isEmpty } from "../../../services/utils/isEmpty";
 
 interface Props {
@@ -43,6 +44,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
         disabled,
         disabledSelector,
     }: Props) => {
+        const [query, setQuery] = useState("");
         const [selectedCountryIndex, setSelectedCountryIndex] = useState(
             getSelectedCountryIndex(countries, selectedCountry),
         );
@@ -94,13 +96,47 @@ export const CountrySelector: React.FC<Props> = React.memo(
         const keyDownHandler = (
             event: React.KeyboardEvent<HTMLDivElement>,
         ): void => {
+            let queryTimer;
             const code = event.which;
+
+            if (queryTimer) {
+                clearTimeout(queryTimer);
+            }
 
             if (code === KeyCode.Up) {
                 move(-1);
             }
             if (code === KeyCode.Down) {
                 move(1);
+            }
+            if (code === KeyCode.Enter) {
+                const newSelectedCountry = countries[selectedCountryIndex];
+                setSelectedCountry(newSelectedCountry);
+                closeListHandler(newSelectedCountry);
+            }
+            if (
+                (code >= KeyCode.A && code <= KeyCode.Z) ||
+                code === KeyCode.Space
+            ) {
+                const newQuery = query + String.fromCharCode(code);
+                setQuery(newQuery);
+
+                const searchedCountryIndex = getSearchCountryIndex(
+                    countries,
+                    newQuery,
+                );
+
+                if (searchedCountryIndex) {
+                    setSelectedCountryIndex(searchedCountryIndex);
+                    scrollTo(
+                        countryListRef,
+                        countryItemRefs.current[searchedCountryIndex],
+                    );
+                }
+
+                queryTimer = setTimeout(() => {
+                    setQuery("");
+                }, 1000);
             }
             if (code === KeyCode.Escape) {
                 closeListHandler(selectedCountry);

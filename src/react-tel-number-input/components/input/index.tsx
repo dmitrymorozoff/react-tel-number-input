@@ -15,28 +15,31 @@ import InputMask from "react-input-mask";
 import { getMask } from "../../../services/utils/get-mask";
 
 interface Props {
-    selectedCountry: Country;
-    phoneInputRef: RefObject<HTMLInputElement>;
-    placeholder: string;
-    onChangeInput: OnChangeInput;
-    disableExamplePlaceholder: boolean;
     autoFocus: boolean;
+    disableExamplePlaceholder: boolean;
     disabled: boolean;
     disabledInput: boolean;
+    excludeMasks: string[];
+    onChangeInput: OnChangeInput;
+    phoneInputRef: RefObject<HTMLInputElement>;
+    placeholder: string;
+    selectedCountry: Country;
     showMask: boolean;
+    value: string;
 }
 
 export const Input: React.FC<Props> = React.memo(
     ({
-        selectedCountry,
-        phoneInputRef,
-        placeholder,
-        onChangeInput,
-        showMask,
-        disableExamplePlaceholder,
         autoFocus,
+        disableExamplePlaceholder,
         disabled,
         disabledInput,
+        excludeMasks,
+        onChangeInput,
+        phoneInputRef,
+        placeholder,
+        selectedCountry,
+        showMask,
     }: Props) => {
         const [isFocus, setFocus] = React.useState<boolean>(false);
         const [value, setValue] = React.useState<string>("");
@@ -78,6 +81,14 @@ export const Input: React.FC<Props> = React.memo(
                 e164: parsedPhoneNumber?.format("E.164"),
             });
         };
+
+        if (
+            excludeMasks
+                .map(mask => mask.toUpperCase())
+                .includes(selectedCountry.alpha2.toUpperCase())
+        ) {
+            showMask = false;
+        }
 
         const placeholderValue = getPlaceholderValue(
             selectedCountry,

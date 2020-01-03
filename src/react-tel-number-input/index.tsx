@@ -4,7 +4,7 @@ import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
 import { allCountries, Country } from "../assets/country-list";
 import { getSortingCountries } from "../services/utils/get-sorting-countries";
-import { ChangeEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { isEmpty } from "../services/utils/isEmpty";
 import {
     CountryCallingCode,
@@ -42,17 +42,18 @@ interface Props {
     disabledInput?: boolean;
     disabledSelector?: boolean;
     emojiFlags?: boolean;
+    excludeMasks?: string[];
     ignoredCountries?: string[];
-    value?: string;
     onChange?: () => void;
-    onSelectCountry?: () => void;
     onPhoneInputChange?: () => void;
+    onSelectCountry?: () => void;
     onlyCountries?: string[];
     placeholder?: string;
     preferredCountries?: string[];
     showCountryCodeInList?: boolean;
     showFlags?: boolean;
     showMask?: boolean;
+    value?: string;
 }
 
 export const PhoneInput: React.FC<Props> = ({
@@ -64,17 +65,18 @@ export const PhoneInput: React.FC<Props> = ({
     disabledInput = false,
     disabledSelector = false,
     emojiFlags = true,
+    excludeMasks = [],
     ignoredCountries = [],
-    value,
     onChange,
-    onSelectCountry,
     onPhoneInputChange,
+    onSelectCountry,
     onlyCountries = [],
     placeholder = "",
     preferredCountries = [],
     showCountryCodeInList = true,
     showFlags = true,
     showMask = true,
+    value = "9996206525",
 }: Props) => {
     const phoneInputRef = React.useRef<HTMLInputElement>(null);
     const sortedCountries = getSortingCountries({
@@ -138,6 +140,7 @@ export const PhoneInput: React.FC<Props> = ({
             </div>
             <div className="phone-input-container">
                 <Input
+                    excludeMasks={excludeMasks}
                     showMask={showMask}
                     autoFocus={autoFocus}
                     selectedCountry={selectedCountry}
@@ -147,6 +150,7 @@ export const PhoneInput: React.FC<Props> = ({
                     disableExamplePlaceholder={disableExamplePlaceholder}
                     disabled={disabled}
                     disabledInput={disabledInput}
+                    value={value}
                 />
             </div>
         </div>
