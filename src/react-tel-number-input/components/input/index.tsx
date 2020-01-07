@@ -3,7 +3,7 @@ import cx from "classnames";
 import "./style.scss";
 import { Country } from "../../../assets/country-list";
 import { ChangeEvent, RefObject, useCallback } from "react";
-import { OnChangeInput } from "../../index";
+import { OnChangeInput, Payload } from "../../index";
 import { getPlaceholderValue } from "../../../services/utils/get-placeholder-value";
 import { isEmpty } from "../../../services/utils/isEmpty";
 import {
@@ -13,6 +13,7 @@ import {
 } from "libphonenumber-js";
 import InputMask from "react-input-mask";
 import { getMask } from "../../../services/utils/get-mask";
+import { getPayloadPhoneNumber } from "../../../services/utils/get-payload-phone-number";
 
 interface Props {
     autoFocus: boolean;
@@ -25,7 +26,7 @@ interface Props {
     placeholder: string;
     selectedCountry: Country;
     showMask: boolean;
-    value: string;
+    value: Payload | undefined;
 }
 
 export const Input: React.FC<Props> = React.memo(
@@ -40,9 +41,12 @@ export const Input: React.FC<Props> = React.memo(
         placeholder,
         selectedCountry,
         showMask,
+        value,
     }: Props) => {
         const [isFocus, setFocus] = React.useState<boolean>(false);
-        const [value, setValue] = React.useState<string>("");
+        const [currentValue, setCurrentValue] = React.useState<string>(
+            value.phoneNumber?.targetValue || "",
+        );
         const [parsedValue, setParsedValue] = React.useState<
             PhoneNumber | undefined
         >(undefined);
@@ -63,23 +67,22 @@ export const Input: React.FC<Props> = React.memo(
         ): void => {
             const targetValue = event.target.value;
 
-            setValue(targetValue);
+            setCurrentValue(targetValue);
             const parsedPhoneNumber = parsePhoneNumberFromString(
                 targetValue,
                 selectedCountry.alpha2 as CountryCode,
             );
             setParsedValue(parsedPhoneNumber);
-            onChangeInput({
-                targetValue,
-                countryCallingCode: parsedPhoneNumber?.countryCallingCode,
-                formattedNumber: parsedPhoneNumber?.number,
-                nationalNumber: parsedPhoneNumber?.nationalNumber,
-                isValid: parsedPhoneNumber?.isValid(),
-                formatInternational: parsedPhoneNumber?.formatInternational(),
-                formatNational: parsedPhoneNumber?.formatNational(),
-                uri: parsedPhoneNumber?.getURI(),
-                e164: parsedPhoneNumber?.format("E.164"),
-            });
+            if (!Boolean(targetValue)) {
+                onChangeInput(undefined);
+            } else {
+                onChangeInput(
+                    getPayloadPhoneNumber(
+                        targetValue,
+                        selectedCountry.alpha2 as CountryCode,
+                    ),
+                );
+            }
         };
 
         if (
@@ -112,8 +115,8 @@ export const Input: React.FC<Props> = React.memo(
                 )}
                 <InputMask
                     mask={mask}
-                    maskChar="_"
-                    value={value}
+                    maskChar=""
+                    value={currentValue}
                     type="tel"
                     className={cx("phone-input__input", {
                         "phone-input__input--is-focus": isFocus,

@@ -4,7 +4,7 @@ import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
 import { allCountries, Country } from "../assets/country-list";
 import { getSortingCountries } from "../services/utils/get-sorting-countries";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { isEmpty } from "../services/utils/isEmpty";
 import {
     CountryCallingCode,
@@ -24,7 +24,7 @@ export interface PhoneNumber {
     e164?: string;
 }
 
-export type OnChangeInput = (value: PhoneNumber) => void;
+export type OnChangeInput = (value: PhoneNumber | undefined) => void;
 
 export type OnChangeCountry = (value: Country) => void;
 
@@ -44,16 +44,16 @@ interface Props {
     emojiFlags?: boolean;
     excludeMasks?: string[];
     ignoredCountries?: string[];
-    onChange?: () => void;
-    onPhoneInputChange?: () => void;
-    onSelectCountry?: () => void;
+    onChange?: (value: Payload) => void;
+    onPhoneInputChange?: (value: Payload) => void;
+    onSelectCountry?: (value: Payload) => void;
     onlyCountries?: string[];
     placeholder?: string;
     preferredCountries?: string[];
     showCountryCodeInList?: boolean;
     showFlags?: boolean;
     showMask?: boolean;
-    value?: string;
+    value?: Payload;
 }
 
 export const PhoneInput: React.FC<Props> = ({
@@ -64,7 +64,7 @@ export const PhoneInput: React.FC<Props> = ({
     disabled = false,
     disabledInput = false,
     disabledSelector = false,
-    emojiFlags = true,
+    emojiFlags = false,
     excludeMasks = [],
     ignoredCountries = [],
     onChange,
@@ -76,7 +76,7 @@ export const PhoneInput: React.FC<Props> = ({
     showCountryCodeInList = true,
     showFlags = true,
     showMask = true,
-    value = "9996206525",
+    value,
 }: Props) => {
     const phoneInputRef = React.useRef<HTMLInputElement>(null);
     const sortedCountries = getSortingCountries({
@@ -89,9 +89,11 @@ export const PhoneInput: React.FC<Props> = ({
     });
 
     const initialSelectedCountry =
+        value?.country ||
         sortedCountries.find(
             country => country.alpha2 === defaultCountry.toUpperCase(),
-        ) || sortedCountries[0];
+        ) ||
+        sortedCountries[0];
 
     const [selectedCountry, setSelectedCountry] = React.useState<Country>(
         initialSelectedCountry,
@@ -99,28 +101,44 @@ export const PhoneInput: React.FC<Props> = ({
 
     const [payload, setPayload] = useState<Payload>({
         country: selectedCountry,
-        phoneNumber: undefined,
+        phoneNumber: value?.phoneNumber || undefined,
     });
 
     const onChangeCountry: OnChangeCountry = value => {
         setSelectedCountry(value);
-        setPayload({
-            ...payload,
-            country: value,
+        setPayload(prev => {
+            const newPayload = {
+                ...prev,
+                country: value,
+            };
+            if (onSelectCountry) {
+                onSelectCountry(newPayload);
+            }
+            return newPayload;
         });
     };
 
     const onChangeInput: OnChangeInput = useCallback(
         value => {
-            setPayload({
-                ...payload,
-                phoneNumber: value,
+            setPayload(prev => {
+                const newPayload = {
+                    ...prev,
+                    phoneNumber: value,
+                };
+                if (onPhoneInputChange) {
+                    onPhoneInputChange(newPayload);
+                }
+                return newPayload;
             });
         },
         [payload],
     );
 
-    console.log("payload", payload);
+    useEffect(() => {
+        if (onChange) {
+            onChange(payload);
+        }
+    }, [payload]);
 
     return (
         <div className="react-tel-number-input">
