@@ -27,6 +27,8 @@ interface Props {
     disabledSelector: boolean;
     showFlags: boolean;
     showCountryCodeInList: boolean;
+    showCountrySelectorFlag: boolean;
+    showCountrySelectorAlpha: boolean;
     emojiFlags: boolean;
     onChangeCountry: OnChangeCountry;
 }
@@ -36,6 +38,8 @@ export const CountrySelector: React.FC<Props> = React.memo(
         countries,
         selectedCountry,
         showCountryCodeInList = true,
+        showCountrySelectorFlag,
+        showCountrySelectorAlpha,
         setSelectedCountry,
         showFlags,
         emojiFlags,
@@ -175,7 +179,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
                     tabIndex={0}
                     onClick={onFocusHandler}
                 >
-                    {showFlags && (
+                    {showFlags && showCountrySelectorFlag && (
                         <div className={"country-selector__flag"}>
                             <Flag
                                 emojiFlags={emojiFlags}
@@ -183,21 +187,23 @@ export const CountrySelector: React.FC<Props> = React.memo(
                             />
                         </div>
                     )}
-                    <input
-                        ref={countryInputRef}
-                        value={
-                            !isEmpty(selectedCountry)
-                                ? selectedCountry.alpha2
-                                : undefined
-                        }
-                        disabled={disabled || disabledSelector}
-                        type="text"
-                        className={cx("country-selector__input", {
-                            "country-selector__input--is-focus": isFocus,
-                        })}
-                        onFocus={onFocusHandler}
-                        readOnly={true}
-                    />
+                    {showCountrySelectorAlpha && (
+                        <input
+                            ref={countryInputRef}
+                            value={
+                                !isEmpty(selectedCountry)
+                                    ? selectedCountry.alpha2
+                                    : undefined
+                            }
+                            disabled={disabled || disabledSelector}
+                            type="text"
+                            className={cx("country-selector__input", {
+                                "country-selector__input--is-focus": isFocus,
+                            })}
+                            onFocus={onFocusHandler}
+                            readOnly={true}
+                        />
+                    )}
                     <div
                         className={cx("country-selector-toggle", {
                             "country-selector-toggle--is-focus": isFocus,

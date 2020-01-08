@@ -52,7 +52,10 @@ interface Props {
     preferredCountries?: string[];
     showCountryCodeInList?: boolean;
     showFlags?: boolean;
+    showCountrySelectorFlag?: boolean;
+    showCountrySelectorAlpha?: boolean;
     showMask?: boolean;
+    clearable?: boolean;
     value?: Payload;
 }
 
@@ -76,6 +79,9 @@ export const PhoneInput: React.FC<Props> = ({
     showCountryCodeInList = true,
     showFlags = true,
     showMask = true,
+    showCountrySelectorFlag = true,
+    showCountrySelectorAlpha = true,
+    clearable = true,
     value,
 }: Props) => {
     const phoneInputRef = React.useRef<HTMLInputElement>(null);
@@ -154,6 +160,8 @@ export const PhoneInput: React.FC<Props> = ({
                     emojiFlags={emojiFlags}
                     phoneInputRef={phoneInputRef}
                     onChangeCountry={onChangeCountry}
+                    showCountrySelectorFlag={showCountrySelectorFlag}
+                    showCountrySelectorAlpha={showCountrySelectorAlpha}
                 />
             </div>
             <div className="phone-input-container">
@@ -169,6 +177,7 @@ export const PhoneInput: React.FC<Props> = ({
                     disabled={disabled}
                     disabledInput={disabledInput}
                     value={value}
+                    clearable={clearable}
                 />
             </div>
         </div>

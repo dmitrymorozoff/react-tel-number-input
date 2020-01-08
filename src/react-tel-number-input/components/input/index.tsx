@@ -17,6 +17,7 @@ import { getPayloadPhoneNumber } from "../../../services/utils/get-payload-phone
 
 interface Props {
     autoFocus: boolean;
+    clearable: boolean;
     disableExamplePlaceholder: boolean;
     disabled: boolean;
     disabledInput: boolean;
@@ -32,6 +33,7 @@ interface Props {
 export const Input: React.FC<Props> = React.memo(
     ({
         autoFocus,
+        clearable,
         disableExamplePlaceholder,
         disabled,
         disabledInput,
@@ -45,7 +47,7 @@ export const Input: React.FC<Props> = React.memo(
     }: Props) => {
         const [isFocus, setFocus] = React.useState<boolean>(false);
         const [currentValue, setCurrentValue] = React.useState<string>(
-            value.phoneNumber?.targetValue || "",
+            value?.phoneNumber?.targetValue || "",
         );
         const [parsedValue, setParsedValue] = React.useState<
             PhoneNumber | undefined
@@ -61,6 +63,12 @@ export const Input: React.FC<Props> = React.memo(
         const onBlurHandler = useCallback((): void => {
             setFocus(false);
         }, []);
+
+        const onClearableHandler = (): void => {
+            setCurrentValue("");
+            setParsedValue(undefined);
+            onChangeInput(undefined);
+        };
 
         const changeInputHandler = (
             event: ChangeEvent<HTMLInputElement>,
@@ -129,10 +137,18 @@ export const Input: React.FC<Props> = React.memo(
                     onBlur={onBlurHandler}
                     onChange={changeInputHandler}
                 >
-                    {inputProps => (
+                    {(inputProps): JSX.Element => (
                         <input {...inputProps} ref={phoneInputRef} />
                     )}
                 </InputMask>
+                {clearable && Boolean(currentValue.length) && (
+                    <div
+                        className={"phone-input-clear"}
+                        onClick={onClearableHandler}
+                    >
+                        ✕
+                    </div>
+                )}
             </div>
         );
     },

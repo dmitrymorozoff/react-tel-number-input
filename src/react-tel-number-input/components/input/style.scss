@@ -39,4 +39,25 @@
         z-index: 0;
         font-family: inherit;
     }
+
+    &-clear {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 8px;
+        margin: auto 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 12px;
+        transition: 0.2s;
+        appearance: none;
+        &:hover {
+            background-color: #f2f5f8;
+        }
+    }
 }

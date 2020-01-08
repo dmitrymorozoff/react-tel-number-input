@@ -60,6 +60,7 @@
             transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
             text-align: center;
             display: inline-block;
+            margin-left: auto;
 
             &__arrow {
                 color: $primary-color;
