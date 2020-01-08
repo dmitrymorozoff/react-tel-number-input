@@ -14,11 +14,13 @@ export const Flag: React.FC<Props> = React.memo(
             <React.Fragment>
                 {emojiFlags ? (
                     <Twemoji
+                        data-testid="emoji"
                         text={`${country ? country.emoji : ""}`}
                         className={"emoji-flag"}
                     />
                 ) : (
                     <div
+                        data-testid="css-flag"
                         className={`iti__flag iti__${country.alpha2.toLowerCase()}`}
                     />
                 )}
