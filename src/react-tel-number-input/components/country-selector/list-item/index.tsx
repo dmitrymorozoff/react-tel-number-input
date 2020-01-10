@@ -1,5 +1,4 @@
 import * as React from "react";
-import "../style.scss";
 import { Country } from "src/assets/country-list";
 import { Flag } from "../flag";
 import cx from "classnames";
@@ -12,7 +11,7 @@ interface Props {
     showCountryCodeInList: boolean;
     showFlags: boolean;
     emojiFlags: boolean;
-    countryItemRefs: MutableRefObject<(HTMLDivElement | null)[]>;
+    countryItemRefs: MutableRefObject<(HTMLDivElement | null)[]> | null;
 }
 
 export const ListItem: React.FC<Props> = React.memo(
@@ -30,11 +29,14 @@ export const ListItem: React.FC<Props> = React.memo(
         }, []);
 
         const setCountryItemsRefs = useCallback((ref: HTMLDivElement): void => {
-            countryItemRefs.current.push(ref);
+            if (countryItemRefs) {
+                countryItemRefs.current.push(ref);
+            }
         }, []);
 
         return (
             <div
+                data-testid="list-item"
                 ref={setCountryItemsRefs}
                 className={cx("country-selector-list__item", {
                     "country-selector-list__item--selected": isSelected,
@@ -50,10 +52,16 @@ export const ListItem: React.FC<Props> = React.memo(
                         <Flag emojiFlags={emojiFlags} country={country} />
                     </div>
                 )}
-                <div className={"country-selector-text"}>
+                <div
+                    className={"country-selector-text"}
+                    data-testid="country-text"
+                >
                     {country.name}
                     {showCountryCodeInList && (
-                        <div className={"country-selector-code"}>
+                        <div
+                            className={"country-selector-code"}
+                            data-testid="country-code"
+                        >
                             {`(${country.countryCallingCodes[0]})`}
                         </div>
                     )}

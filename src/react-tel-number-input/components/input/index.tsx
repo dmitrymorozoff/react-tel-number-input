@@ -1,19 +1,15 @@
 import * as React from "react";
 import cx from "classnames";
-import "./style.scss";
 import { Country } from "../../../assets/country-list";
 import { ChangeEvent, RefObject, useCallback } from "react";
 import { OnChangeInput, Payload } from "../../index";
-import { getPlaceholderValue } from "../../../services/utils/get-placeholder-value";
-import { isEmpty } from "../../../services/utils/isEmpty";
+import { Utils } from "../../../services/utils";
 import {
     CountryCode,
     parsePhoneNumberFromString,
     PhoneNumber,
 } from "libphonenumber-js";
 import InputMask from "react-input-mask";
-import { getMask } from "../../../services/utils/get-mask";
-import { getPayloadPhoneNumber } from "../../../services/utils/get-payload-phone-number";
 
 interface Props {
     autoFocus: boolean;
@@ -85,7 +81,7 @@ export const Input: React.FC<Props> = React.memo(
                 onChangeInput(undefined);
             } else {
                 onChangeInput(
-                    getPayloadPhoneNumber(
+                    Utils.getPayloadPhoneNumber(
                         targetValue,
                         selectedCountry.alpha2 as CountryCode,
                     ),
@@ -93,20 +89,16 @@ export const Input: React.FC<Props> = React.memo(
             }
         };
 
-        if (
-            excludeMasks
-                .map(mask => mask.toUpperCase())
-                .includes(selectedCountry.alpha2.toUpperCase())
-        ) {
+        if (Utils.checkMaskExist(excludeMasks, selectedCountry)) {
             showMask = false;
         }
 
-        const placeholderValue = getPlaceholderValue(
+        const placeholderValue = Utils.getPlaceholderValue(
             selectedCountry,
             disableExamplePlaceholder,
             placeholder,
         );
-        const mask = getMask(placeholderValue, showMask);
+        const mask = Utils.getMask(placeholderValue, showMask);
 
         return (
             <div
@@ -116,7 +108,7 @@ export const Input: React.FC<Props> = React.memo(
                 })}
                 onClick={onFocusHandler}
             >
-                {!isEmpty(selectedCountry) && (
+                {!Utils.isEmpty(selectedCountry) && (
                     <div
                         className={"phone-input-dial-code"}
                     >{`(${selectedCountry.countryCallingCodes[0]})`}</div>

@@ -1,20 +1,14 @@
 import * as React from "react";
 import cx from "classnames";
-import "./style.scss";
-import "../../../assets/flags/flags.scss";
 import { useOnClickOutside } from "../../../services/hooks/use-on-click-outside";
 import { Country } from "../../../assets/country-list";
 import { ListItem } from "./list-item";
 import { KeyCode } from "../../../services/variables";
 import { Flag } from "./flag";
-import { scrollTo } from "../../../services/utils/scroll-to";
 import { useCallback, useEffect, useState } from "react";
 import { RefObject } from "react";
 import { OnChangeCountry } from "../../index";
-import { getSelectedCountryIndex } from "../../../services/utils/get-selected-country-index";
-import { getHighlightCountryIndex } from "../../../services/utils/get-highlight-country-index";
-import { getSearchCountryIndex } from "../../../services/utils/get-search-country";
-import { isEmpty } from "../../../services/utils/isEmpty";
+import { Utils } from "../../../services/utils";
 
 interface Props {
     phoneInputRef: RefObject<HTMLInputElement>;
@@ -50,7 +44,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
     }: Props) => {
         const [query, setQuery] = useState("");
         const [selectedCountryIndex, setSelectedCountryIndex] = useState(
-            getSelectedCountryIndex(countries, selectedCountry),
+            Utils.getSelectedCountryIndex(countries, selectedCountry),
         );
         const countryItemRefs = React.useRef<(HTMLDivElement | null)[]>([]);
         const countryInputRef = React.useRef<HTMLInputElement>(null);
@@ -60,7 +54,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
 
         useEffect(() => {
             if (isFocus) {
-                scrollTo(
+                Utils.scrollTo(
                     countryListRef,
                     countryItemRefs.current[selectedCountryIndex],
                 );
@@ -68,7 +62,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
         }, [isFocus, selectedCountryIndex]);
 
         const move = (direction: -1 | 1): void => {
-            const newSelectedCountryIndex = getHighlightCountryIndex(
+            const newSelectedCountryIndex = Utils.getHighlightCountryIndex(
                 direction,
                 selectedCountryIndex,
                 countries,
@@ -80,7 +74,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
             (newSelectedCountry: Country): void => {
                 setFocus(false);
                 setSelectedCountryIndex(
-                    getSelectedCountryIndex(
+                    Utils.getSelectedCountryIndex(
                         countries,
                         newSelectedCountry || selectedCountry,
                     ),
@@ -125,14 +119,14 @@ export const CountrySelector: React.FC<Props> = React.memo(
                 const newQuery = query + String.fromCharCode(code);
                 setQuery(newQuery);
 
-                const searchedCountryIndex = getSearchCountryIndex(
+                const searchedCountryIndex = Utils.getSearchCountryIndex(
                     countries,
                     newQuery,
                 );
 
                 if (searchedCountryIndex) {
                     setSelectedCountryIndex(searchedCountryIndex);
-                    scrollTo(
+                    Utils.scrollTo(
                         countryListRef,
                         countryItemRefs.current[searchedCountryIndex],
                     );
@@ -191,7 +185,7 @@ export const CountrySelector: React.FC<Props> = React.memo(
                         <input
                             ref={countryInputRef}
                             value={
-                                !isEmpty(selectedCountry)
+                                !Utils.isEmpty(selectedCountry)
                                     ? selectedCountry.alpha2
                                     : undefined
                             }

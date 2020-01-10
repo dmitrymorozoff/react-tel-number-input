@@ -1,11 +1,9 @@
 import * as React from "react";
-import "./style.scss";
 import { CountrySelector } from "./components/country-selector";
 import { Input } from "./components/input";
 import { allCountries, Country } from "../assets/country-list";
-import { getSortingCountries } from "../services/utils/get-sorting-countries";
 import { useCallback, useState, useEffect } from "react";
-import { isEmpty } from "../services/utils/isEmpty";
+import { Utils } from "../services/utils";
 import {
     CountryCallingCode,
     E164Number,
@@ -85,8 +83,8 @@ export const PhoneInput: React.FC<Props> = ({
     value,
 }: Props) => {
     const phoneInputRef = React.useRef<HTMLInputElement>(null);
-    const sortedCountries = getSortingCountries({
-        allCountries: isEmpty(customAllCountries)
+    const sortedCountries = Utils.getSortingCountries({
+        allCountries: Utils.isEmpty(customAllCountries)
             ? allCountries
             : (customAllCountries as Country[]),
         ignoredCountries,
